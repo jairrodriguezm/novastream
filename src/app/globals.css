@@ -1,26 +1,180 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Theme by Default (Apple Alabaster + Colombian Emerald) */
+  --background: #f5f7f6;
+  --foreground: #0b1711;
+  --text-primary: #0b1711;
+  --text-secondary: #374b41;
+  --text-muted: #5c7267;
+
+  /* Colombian Emerald Palette */
+  --emerald-muzo-deep: #04140d;
+  --emerald-chivor-teal: #007a5e;
+  --emerald-colombian: #009e52;
+  --emerald-vivid: #00c466;
+  --emerald-crystal: #007a40;
+  --emerald-badge-text: #005c2f;
+
+  /* Apple Surfaces & Glass Tokens (Light Default) */
+  --surface-card: #ffffff;
+  --surface-pill: rgba(0, 158, 82, 0.08);
+  --border-subtle: rgba(11, 23, 17, 0.1);
+  --skeleton-base: #e2ebe6;
+  --skeleton-sub: #d3e0d9;
+
+  --apple-glass-bg: color-mix(in oklab, #ffffff 78%, transparent);
+  --apple-glass-border: color-mix(in oklab, var(--emerald-colombian) 18%, rgba(11, 23, 17, 0.08));
+  --apple-glass-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 10px 28px -8px rgba(6, 24, 16, 0.1),
+    0 2px 8px -2px rgba(0, 158, 82, 0.08);
+
+  --hero-scrim-bottom: linear-gradient(
+    to top,
+    #f5f7f6 0%,
+    rgba(245, 247, 246, 0.52) 26%,
+    transparent 62%
+  );
+  --hero-scrim-side: linear-gradient(
+    to right,
+    rgba(245, 247, 246, 0.72) 0%,
+    rgba(245, 247, 246, 0.32) 32%,
+    transparent 65%
+  );
+
+  /* Progressive enhancement for CSS gradient interpolation space */
+  --in-oklab: ;
+  --in-oklch: ;
+}
+
+[data-theme="dark"] {
+  --background: #030906;
+  --foreground: #f5f7f6;
+  --text-primary: #f5f7f6;
+  --text-secondary: #c9d8d1;
+  --text-muted: #8ca398;
+
+  --emerald-colombian: #00a859;
+  --emerald-vivid: #10e879;
+  --emerald-crystal: #6bffb3;
+  --emerald-badge-text: #6bffb3;
+
+  --surface-card: #06150e;
+  --surface-pill: rgba(255, 255, 255, 0.05);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --skeleton-base: #06160f;
+  --skeleton-sub: #0b2419;
+
+  --apple-glass-bg: color-mix(in oklab, #061810 68%, transparent);
+  --apple-glass-border: color-mix(in oklab, #ffffff 14%, transparent);
+  --apple-glass-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.12) inset,
+    0 12px 32px -8px rgba(0, 0, 0, 0.65),
+    0 4px 12px -2px rgba(0, 168, 89, 0.08);
+
+  --hero-scrim-bottom: linear-gradient(
+    to top,
+    #030906 0%,
+    rgba(3, 9, 6, 0.45) 28%,
+    transparent 65%
+  );
+  --hero-scrim-side: linear-gradient(
+    to right,
+    rgba(3, 9, 6, 0.72) 0%,
+    rgba(4, 20, 13, 0.28) 34%,
+    transparent 68%
+  );
+}
+
+@supports (background: linear-gradient(in oklab, white, black)) {
+  :root {
+    --in-oklab: in oklab;
+    --in-oklch: in oklch;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-colombian-emerald: var(--emerald-colombian);
+  --color-emerald-vivid: var(--emerald-vivid);
+  --color-emerald-crystal: var(--emerald-crystal);
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(
+      ellipse 80% 50% at 50% -10% var(--in-oklab),
+      color-mix(in oklab, var(--emerald-colombian) 18%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 85% 20% var(--in-oklab),
+      color-mix(in oklab, var(--emerald-chivor-teal) 12%, transparent),
+      transparent 65%
+    );
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Apple-inspired Liquid Glass & Colombian Emerald Shine Utilities */
+.apple-glass {
+  background: var(--apple-glass-bg);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid var(--apple-glass-border);
+  box-shadow: var(--apple-glass-shadow);
 }
+
+.emerald-cta-shine {
+  background: linear-gradient(
+    135deg var(--in-oklch),
+    var(--emerald-vivid) 0%,
+    var(--emerald-colombian) 55%,
+    var(--emerald-chivor-teal) 100%
+  );
+  box-shadow:
+    0 1px 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 -1px 1px 0 rgba(0, 40, 20, 0.35) inset,
+    0 8px 24px -4px color-mix(in oklab, var(--emerald-colombian) 50%, transparent),
+    0 2px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.emerald-cta-shine:hover {
+  box-shadow:
+    0 1px 2px 0 rgba(255, 255, 255, 0.6) inset,
+    0 12px 32px -4px color-mix(in oklab, var(--emerald-vivid) 62%, transparent),
+    0 4px 12px 0 rgba(0, 0, 0, 0.3);
+}
+
+.apple-card-shadow {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.2) inset,
+    0 12px 28px -6px rgba(5, 22, 14, 0.22),
+    0 4px 10px -2px rgba(5, 22, 14, 0.12);
+}
+
+.apple-card-shadow:hover {
+  box-shadow:
+    0 1px 0 0 rgba(16, 232, 121, 0.5) inset,
+    0 20px 38px -10px rgba(0, 158, 82, 0.28),
+    0 0 28px -4px color-mix(in oklab, var(--emerald-colombian) 42%, transparent);
+}
+
+/* Hide scrollbars while keeping smooth native scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
