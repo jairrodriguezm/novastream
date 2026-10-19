@@ -17,4 +17,14 @@
 - `src/features/<feature-name>/`: Lógica de dominio encapsulada (`components/`, `hooks/`, `services/`, `types.ts`).
 - `src/shared/`: Componentes UI atómicos, utilidades y configuración transversal.
 
+## 4. Estrategia de Caché y Revalidación (Next.js 15/16 `cacheComponents`)
+- **Datos Globales de Catálogo (Hero, Tendencias, EPG general):** DEBEN usar la directiva `'use cache'` junto con `cacheLife` y `cacheTag` de `'next/cache'`. No deben mostrar Skeletons en la primera carga, sino formar parte del Shell pre-renderizado (PPR).
+- **Datos Personalizados por Usuario (Continuar viendo, Mi Lista, Recomendaciones por sesión):** NO usan `'use cache'`. Acceden a `cookies()` o `headers()` y SIEMPRE deben estar aislados dentro de un `<Suspense fallback={<Skeleton />}>`.
+- **Invalidación:** Prohibido recargar toda la ruta si solo cambió un carril. Usar siempre `revalidateTag('nombre-del-tag')` desde Server Actions o Webhooks del CMS.
+
+## 5. Enrutamiento Avanzado, Mutaciones y Proxy/Middleware
+- **Parallel Routes (`@slot`):** Todo slot paralelo DEBE incluir un archivo `default.tsx` que retorne `null` en su raíz y dentro de rutas dinámicas para prevenir errores 404 en recargas duras (Hard Navigations).
+- **Mutaciones Interactivas (`useOptimistic`):** Cualquier acción de feedback inmediato (ej. Favoritos / Mi Lista / Likes) debe usar `useOptimistic` + `useTransition` acoplado a una Server Action para garantizar feedback visual en <16ms (optimización de INP).
+- **Middleware / Proxy:** Mantener `matcher` estricto excluyendo `/_next/static`, `/_next/image` y `favicon.ico`. Prohibido importar librerías pesadas en el middleware.
+
 <!-- END:nextjs-agent-rules -->
