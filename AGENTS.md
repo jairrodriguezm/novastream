@@ -32,4 +32,16 @@
 - **Sincronización Cliente-Servidor:** Para datos que requieran polling o revalidación en cliente (ej. EPG en vivo), pre-cargar en el Server Component usando `prefetchQuery`, serializar con `dehydrate` y consumir con `useQuery` dentro de un `HydrationBoundary`.
 - **Estado del Reproductor (Zustand):** El estado del reproductor multimedia SIEMPRE debe residir en un store de Zustand fuera de React Context. En los componentes consumidores, SIEMPRE usar selectores específicos (ej. `const isMuted = usePlayerStore(s => s.isMuted)`). Prohibido desestructurar el store completo (`const { isMuted, currentTime } = usePlayerStore()`) en componentes UI para evitar re-renders innecesarios.
 
+## 7. Estándares de Testing (Vitest & Playwright)
+- **Localizadores Semánticos:** Prohibido seleccionar elementos por clases CSS (`.btn-primary`) o tags genéricos. Usar SIEMPRE `getByRole`, `getByLabelText`, `getByText` o `data-testid` como último recurso.
+- **Aislamiento en Vitest:** Todo test unitario de Zustand o hooks globales debe reiniciar el estado en `beforeEach`/`afterEach`. Mockear módulos en la frontera (`vi.mock('@/...')`) y nunca llamadas internas no exportadas.
+- **Page Object Model (POM) en Playwright:** Los tests E2E deben encapsular la interacción en clases de modelo de página para evitar duplicar selectores.
+- **Aserciones Web-First:** Usar siempre aserciones asíncronas con reintento automático (`await expect(locator).toBeVisible()`) en lugar de verificaciones sincrónicas que generan *flakiness*.
+
+## 8. Optimización Quirúrgica de LCP y Recursos Multimedia
+- **Regla del Candidato LCP:** El elemento LCP de cualquier vista de catálogo SIEMPRE debe ser identificado y optimizado con `priority` en `next/image`. Queda estrictamente prohibido usar `loading="lazy"` o scripts en cliente que retrasen el render de la imagen destacada.
+- **Formato y Compresión:** `next.config.ts` debe priorizar formatos modernos en el orden `['image/avif', 'image/webp']`.
+- **Cero Render Delay:** Ningún elemento LCP debe depender de efectos de montaje (`useEffect`), hidratación de estado en cliente, ni transiciones de `opacity` basadas en `isLoaded`. Debe pintarse tan pronto como los bytes lleguen del navegador.
+- **Preload de Metadatos de Video:** En rutas de reproducción donde el LCP sea el elemento `<video>`, usar `preload="metadata"` en conjunto con la precarga del manifiesto HLS/DASH mediante `ReactDOM.preload()` en el Server Component.
+
 <!-- END:nextjs-agent-rules -->

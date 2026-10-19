@@ -11,7 +11,6 @@ export async function fetchLiveChannelStatus(channelId: string): Promise<LivePro
                 : 'Maratón Sci-Fi: Películas de Culto',
         startsAt: '17:00',
         endsAt: '19:00',
-        // Calculamos progreso simulado según el segundo actual
         progressPercent: Math.min(100, Math.floor(((new Date().getSeconds() % 60) / 60) * 100)),
         isLive: true,
     };
