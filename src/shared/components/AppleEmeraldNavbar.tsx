@@ -2,7 +2,7 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 
 export function AppleEmeraldNavbar() {
   return (
-    <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 md:px-8 pointer-events-none">
+    <header className="fixed top-16 inset-x-0 z-50 flex justify-center px-4 md:px-8 pointer-events-none">
       <nav
         aria-label="Navegación principal"
         className="pointer-events-auto apple-glass rounded-full px-4 py-2.5 md:px-6 flex items-center justify-between gap-6 md:gap-10 max-w-5xl w-full transition-all duration-300"

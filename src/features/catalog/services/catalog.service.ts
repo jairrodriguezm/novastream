@@ -81,3 +81,23 @@ export async function getContinueWatchingRail(): Promise<MediaItem[]> {
         fetchedAt: timestamp,
     }));
 }
+
+export async function getMediaById(id: string): Promise<MediaItem> {
+  'use cache';
+  cacheTag(`media-${id}`);
+  cacheLife('minutes');
+
+  await delay(150);
+  return {
+    id,
+    title: `Título Exclusivo (${id.toUpperCase()})`,
+    synopsis:
+      'Transmisión disponible en Ultra HD 4K con audio espacial Dolby Atmos y protección de contenido Widevine/FairPlay.',
+    backdropUrl: `https://picsum.photos/seed/${id}-bg/1280/720`,
+    posterUrl: `https://picsum.photos/seed/${id}/400/600`,
+    category: id.includes('live') ? 'LIVE' : 'VOD',
+    maturityRating: '16+',
+    durationMinutes: 118,
+    fetchedAt: new Date().toLocaleTimeString('es-CO'),
+  };
+}
