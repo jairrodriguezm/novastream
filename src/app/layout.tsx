@@ -1,6 +1,6 @@
-// src/app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
+import { QueryProvider } from '@/shared/providers/QueryProvider';
 
 export const metadata: Metadata = {
   title: 'NovaStream — Streaming de Alto Rendimiento',
@@ -17,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="bg-zinc-950 text-white antialiased">
-        {children}
-        {modal}
+        <QueryProvider>
+          {children}
+          {modal}
+        </QueryProvider>
       </body>
     </html>
   );

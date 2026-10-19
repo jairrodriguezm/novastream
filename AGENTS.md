@@ -27,4 +27,9 @@
 - **Mutaciones Interactivas (`useOptimistic`):** Cualquier acción de feedback inmediato (ej. Favoritos / Mi Lista / Likes) debe usar `useOptimistic` + `useTransition` acoplado a una Server Action para garantizar feedback visual en <16ms (optimización de INP).
 - **Middleware / Proxy:** Mantener `matcher` estricto excluyendo `/_next/static`, `/_next/image` y `favicon.ico`. Prohibido importar librerías pesadas en el middleware.
 
+## 6. Validación de Datos (Zod) y Manejo de Estado (TanStack Query / Zustand)
+- **Contratos de API Estrictos:** Toda llamada a servicios externos DEBE validarse con Zod (`schema.safeParse`). Prohibido usar `as Type` en respuestas de red.
+- **Sincronización Cliente-Servidor:** Para datos que requieran polling o revalidación en cliente (ej. EPG en vivo), pre-cargar en el Server Component usando `prefetchQuery`, serializar con `dehydrate` y consumir con `useQuery` dentro de un `HydrationBoundary`.
+- **Estado del Reproductor (Zustand):** El estado del reproductor multimedia SIEMPRE debe residir en un store de Zustand fuera de React Context. En los componentes consumidores, SIEMPRE usar selectores específicos (ej. `const isMuted = usePlayerStore(s => s.isMuted)`). Prohibido desestructurar el store completo (`const { isMuted, currentTime } = usePlayerStore()`) en componentes UI para evitar re-renders innecesarios.
+
 <!-- END:nextjs-agent-rules -->

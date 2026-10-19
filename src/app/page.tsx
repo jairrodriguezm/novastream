@@ -1,3 +1,8 @@
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getQueryClient } from '@/shared/lib/get-query-client';
+import { fetchLiveChannelStatus } from '@/features/player/services/live-epg.service';
+import { LiveChannelBadgeClient } from '@/features/player/components/LiveChannelBadgeClient';
+import { PlayerControlsMini } from '@/features/player/components/PlayerControlsMini';
 import { Suspense } from 'react';
 import Image from 'next/image';
 import { getFeaturedHero } from '@/features/catalog/services/catalog.service';
@@ -48,10 +53,28 @@ function RailSkeleton({ title }: { title: string }) {
 export default async function HomePage() {
   const hero = await getFeaturedHero();
 
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ['live-channel', 'canal-1'],
+    queryFn: () => fetchLiveChannelStatus('canal-1'),
+  });
+
   return (
     <main className="min-h-screen bg-transparent text-[var(--text-primary)] pb-20 selection:bg-[var(--emerald-colombian)] selection:text-white">
       <AppleEmeraldNavbar />
       <CacheInspectorBar heroTimestamp={hero.fetchedAt} />
+
+      <section className="px-6 py-4 pt-20 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-4 bg-zinc-900/40">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <LiveChannelBadgeClient channelId="canal-1" />
+        </HydrationBoundary>
+
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-zinc-400">Control Rápido de Reproductor:</span>
+          <PlayerControlsMini />
+        </div>
+      </section>
 
       <section className="relative w-full aspect-[21/9] max-h-[70vh] bg-zinc-900 flex items-end p-8 md:p-14 border-b border-zinc-800 overflow-hidden">
         <Image
